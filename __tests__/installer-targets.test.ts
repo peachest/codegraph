@@ -1049,6 +1049,7 @@ describe('Installer targets — registry', () => {
     expect(getTarget('gemini')?.id).toBe('gemini');
     expect(getTarget('antigravity')?.id).toBe('antigravity');
     expect(getTarget('kiro')?.id).toBe('kiro');
+    expect(getTarget('pi')?.id).toBe('pi');
     expect(getTarget('not-a-real-target')).toBeUndefined();
   });
 
