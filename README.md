@@ -2,7 +2,7 @@
 
 # CodeGraph
 
-### Supercharge Claude Code, Cursor, Codex, OpenCode, Hermes Agent, Gemini, Antigravity, and Kiro with Semantic Code Intelligence
+### Supercharge Claude Code, Cursor, Codex, OpenCode, Hermes Agent, Gemini, Antigravity, Kiro and pi with Semantic Code Intelligence
 
 **~35% cheaper · ~70% fewer tool calls · 100% local**
 
@@ -24,6 +24,7 @@
 [![Gemini](https://img.shields.io/badge/Gemini-supported-blueviolet.svg)](#supported-agents)
 [![Antigravity](https://img.shields.io/badge/Antigravity-supported-blueviolet.svg)](#supported-agents)
 [![Kiro](https://img.shields.io/badge/Kiro-supported-blueviolet.svg)](#supported-agents)
+[![pi](https://img.shields.io/badge/pi-supported-blueviolet.svg)](#supported-agents)
 
 </div>
 
@@ -46,7 +47,7 @@ npx @colbymchenry/codegraph        # zero-install, or:
 npm i -g @colbymchenry/codegraph
 ```
 
-<sub>CodeGraph bundles its own runtime — nothing to compile, no native build, works the same everywhere. The interactive installer auto-configures your agent(s) — Claude Code, Cursor, Codex CLI, opencode, Hermes Agent, Gemini CLI, Antigravity IDE, Kiro.</sub>
+<sub>CodeGraph bundles its own runtime — nothing to compile, no native build, works the same everywhere. The interactive installer auto-configures your agent(s) — Claude Code, Cursor, Codex CLI, opencode, Hermes Agent, Gemini CLI, Antigravity IDE, Kiro, p.</sub>
 
 ### Initialize Projects
 
@@ -85,15 +86,15 @@ Tested across **7 real-world open-source codebases** spanning 7 languages, compa
 
 > **Average: 35% cheaper · 57% fewer tokens · 46% faster · 71% fewer tool calls**
 
-| Codebase | Language | Cost | Tokens | Time | Tool calls |
-|----------|----------|------|--------|------|------------|
-| **VS Code** | TypeScript · ~10k files | 26% cheaper | 78% fewer | 52% faster | 85% fewer |
-| **Excalidraw** | TypeScript · ~640 | 52% cheaper | 90% fewer | 73% faster | 96% fewer |
-| **Django** | Python · ~3k | 12% cheaper | 36% fewer | 19% faster | 53% fewer |
-| **Tokio** | Rust · ~790 | 82% cheaper | 86% fewer | 71% faster | 92% fewer |
-| **OkHttp** | Java · ~645 | 2% cheaper | 13% fewer | 31% faster | 45% fewer |
-| **Gin** | Go · ~110 | 21% cheaper | 34% fewer | 27% faster | 40% fewer |
-| **Alamofire** | Swift · ~110 | 47% cheaper | 64% fewer | 48% faster | 83% fewer |
+| Codebase       | Language                | Cost        | Tokens    | Time       | Tool calls |
+| -------------- | ----------------------- | ----------- | --------- | ---------- | ---------- |
+| **VS Code**    | TypeScript · ~10k files | 26% cheaper | 78% fewer | 52% faster | 85% fewer  |
+| **Excalidraw** | TypeScript · ~640       | 52% cheaper | 90% fewer | 73% faster | 96% fewer  |
+| **Django**     | Python · ~3k            | 12% cheaper | 36% fewer | 19% faster | 53% fewer  |
+| **Tokio**      | Rust · ~790             | 82% cheaper | 86% fewer | 71% faster | 92% fewer  |
+| **OkHttp**     | Java · ~645             | 2% cheaper  | 13% fewer | 31% faster | 45% fewer  |
+| **Gin**        | Go · ~110               | 21% cheaper | 34% fewer | 27% faster | 40% fewer  |
+| **Alamofire**  | Swift · ~110            | 47% cheaper | 64% fewer | 48% faster | 83% fewer  |
 
 The gains scale with codebase size: on large repos the agent answers from the index in a handful of calls with **zero file reads**, while the no-CodeGraph agent fans out across grep/find/Read (and the sub-agents it spawns). On a small repo like Gin (~150 files) native search is already cheap, so the margin narrows.
 
@@ -103,26 +104,26 @@ The gains scale with codebase size: on large repos the agent answers from the in
 **Methodology.** Each arm is `claude -p` (Claude Opus 4.7) run headlessly against the repo with `--strict-mcp-config`: **WITH** = CodeGraph's MCP server enabled, **WITHOUT** = an empty MCP config. Built-in Read/Grep/Bash stay available to both. Same question per repo, **4 runs per arm, median reported**. Cost = the run's `total_cost_usd`; Tokens = total tokens processed (input incl. cached + output); Time = wall-clock; Tool calls = every tool invocation, including those inside any sub-agents the model spawns. Repos cloned at `--depth 1` and indexed by the same CodeGraph build that served them. Re-validated on codegraph **v0.9.4** (2026-05-24); per-repo numbers move run-to-run with how hard the without-arm thrashes (the median-of-4 smooths it, but tails remain — e.g. Tokio's without-arm hit $2.41/3m one batch).
 
 **Queries:**
-| Codebase | Query |
-|----------|-------|
-| VS Code | "How does the extension host communicate with the main process?" |
-| Excalidraw | "How does Excalidraw render and update canvas elements?" |
-| Django | "How does Django's ORM build and execute a query from a QuerySet?" |
-| Tokio | "How does tokio schedule and run async tasks on its runtime?" |
-| OkHttp | "How does OkHttp process a request through its interceptor chain?" |
-| Gin | "How does gin route requests through its middleware chain?" |
-| Alamofire | "How does Alamofire build, send, and validate a request?" |
+| Codebase   | Query                                                              |
+| ---------- | ------------------------------------------------------------------ |
+| VS Code    | "How does the extension host communicate with the main process?"   |
+| Excalidraw | "How does Excalidraw render and update canvas elements?"           |
+| Django     | "How does Django's ORM build and execute a query from a QuerySet?" |
+| Tokio      | "How does tokio schedule and run async tasks on its runtime?"      |
+| OkHttp     | "How does OkHttp process a request through its interceptor chain?" |
+| Gin        | "How does gin route requests through its middleware chain?"        |
+| Alamofire  | "How does Alamofire build, send, and validate a request?"          |
 
 **Raw medians — WITH → WITHOUT:**
-| Codebase | Cost | Tokens | Time | Tool calls |
-|----------|------|--------|------|------------|
-| VS Code | $0.60 → $0.80 | 601k → 2.8M | 1m 10s → 2m 26s | 8 → 55 |
-| Excalidraw | $0.43 → $0.90 | 344k → 3.5M | 48s → 2m 58s | 3 → 79 |
-| Django | $0.59 → $0.67 | 739k → 1.2M | 1m 19s → 1m 38s | 9 → 19 |
-| Tokio | $0.42 → $2.41 | 379k → 2.6M | 53s → 3m 2s | 4 → 53 |
-| OkHttp | $0.47 → $0.47 | 636k → 730k | 42s → 1m 1s | 6 → 11 |
-| Gin | $0.37 → $0.47 | 444k → 675k | 44s → 1m 0s | 6 → 10 |
-| Alamofire | $0.61 → $1.14 | 1.0M → 2.8M | 1m 17s → 2m 27s | 12 → 69 |
+| Codebase   | Cost          | Tokens      | Time            | Tool calls |
+| ---------- | ------------- | ----------- | --------------- | ---------- |
+| VS Code    | $0.60 → $0.80 | 601k → 2.8M | 1m 10s → 2m 26s | 8 → 55     |
+| Excalidraw | $0.43 → $0.90 | 344k → 3.5M | 48s → 2m 58s    | 3 → 79     |
+| Django     | $0.59 → $0.67 | 739k → 1.2M | 1m 19s → 1m 38s | 9 → 19     |
+| Tokio      | $0.42 → $2.41 | 379k → 2.6M | 53s → 3m 2s     | 4 → 53     |
+| OkHttp     | $0.47 → $0.47 | 636k → 730k | 42s → 1m 1s     | 6 → 11     |
+| Gin        | $0.37 → $0.47 | 444k → 675k | 44s → 1m 0s     | 6 → 10     |
+| Alamofire  | $0.61 → $1.14 | 1.0M → 2.8M | 1m 17s → 2m 27s | 12 → 69    |
 
 **Why CodeGraph wins:** with the index available, the agent answers directly — `codegraph_context` to map the area, then one `codegraph_explore` for the relevant source — and stops, usually with zero file reads. Without it, the agent (and the Explore sub-agents it spawns) spends most of its budget on discovery (find/ls/grep) before reading the right code. CodeGraph only helps when queried *directly*, so its instructions steer agents to answer directly rather than delegate exploration to file-reading sub-agents — otherwise a sub-agent reads files regardless and CodeGraph becomes overhead.
 
@@ -132,16 +133,16 @@ The gains scale with codebase size: on large repos the agent answers from the in
 
 ## Key Features
 
-| | |
-|---|---|
-| **Smart Context Building** | One tool call returns entry points, related symbols, and code snippets — no expensive exploration agents |
-| **Full-Text Search** | Find code by name instantly across your entire codebase, powered by FTS5 |
-| **Impact Analysis** | Trace callers, callees, and the full impact radius of any symbol before making changes |
-| **Always Fresh** | File watcher uses native OS events (FSEvents/inotify/ReadDirectoryChangesW) with debounced auto-sync — the graph stays current as you code, zero config |
-| **20+ Languages** | TypeScript, JavaScript, Python, Go, Rust, Java, C#, PHP, Ruby, C, C++, Objective-C, Swift, Kotlin, Dart, Lua, Luau, Svelte, Liquid, Pascal/Delphi |
-| **Framework-aware Routes** | Recognizes web-framework routing files and links URL patterns to their handlers across 14 frameworks |
+|                                     |                                                                                                                                                                                             |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Smart Context Building**          | One tool call returns entry points, related symbols, and code snippets — no expensive exploration agents                                                                                    |
+| **Full-Text Search**                | Find code by name instantly across your entire codebase, powered by FTS5                                                                                                                    |
+| **Impact Analysis**                 | Trace callers, callees, and the full impact radius of any symbol before making changes                                                                                                      |
+| **Always Fresh**                    | File watcher uses native OS events (FSEvents/inotify/ReadDirectoryChangesW) with debounced auto-sync — the graph stays current as you code, zero config                                     |
+| **20+ Languages**                   | TypeScript, JavaScript, Python, Go, Rust, Java, C#, PHP, Ruby, C, C++, Objective-C, Swift, Kotlin, Dart, Lua, Luau, Svelte, Liquid, Pascal/Delphi                                           |
+| **Framework-aware Routes**          | Recognizes web-framework routing files and links URL patterns to their handlers across 14 frameworks                                                                                        |
 | **Mixed iOS / React Native / Expo** | Closes cross-language flows that static parsing misses: Swift ↔ ObjC bridging, React Native legacy bridge + TurboModules + Fabric view components, native → JS event emitters, Expo Modules |
-| **100% Local** | No data leaves your machine. No API keys. No external services. SQLite database only |
+| **100% Local**                      | No data leaves your machine. No API keys. No external services. SQLite database only                                                                                                        |
 
 <details>
 <summary><strong>How auto-syncing works — and why you don't need to run <code>codegraph sync</code> manually</strong></summary>
@@ -176,22 +177,22 @@ The handful of cases where manual `codegraph sync` makes sense: the watcher is d
 
 CodeGraph detects web-framework routing files and emits `route` nodes linked by `references` edges to their handler classes or functions. Querying callers of a view/controller now surfaces the URL pattern that binds it.
 
-| Framework | Shapes recognized |
-|---|---|
-| **Django** | `path()`, `re_path()`, `url()`, `include()` in `urls.py` (CBV `.as_view()`, dotted paths) |
-| **Flask** | `@app.route('/path', methods=[...])`, blueprint routes |
-| **FastAPI** | `@app.get(...)`, `@router.post(...)`, all standard methods |
-| **Express** | `app.get(...)`, `router.post(...)` with middleware chains |
-| **NestJS** | `@Controller` + `@Get/@Post/...`, GraphQL `@Resolver` + `@Query/@Mutation`, `@MessagePattern`/`@EventPattern`, `@SubscribeMessage` |
-| **Laravel** | `Route::get()`, `Route::resource()`, `Controller@action`, tuple syntax |
-| **Drupal** | `*.routing.yml` routes (`_controller`, `_form`, entity handlers); `hook_*` implementations in `.module`/`.theme`/`.install`/`.inc` |
-| **Rails** | `get '/x', to: 'users#index'`, hash-rocket `=>` syntax |
-| **Spring** | `@GetMapping`, `@PostMapping`, `@RequestMapping` on methods |
-| **Gin / chi / gorilla / mux** | `r.GET(...)`, `router.HandleFunc(...)` |
-| **Axum / actix / Rocket** | `.route("/x", get(handler))` |
-| **ASP.NET** | `[HttpGet("/x")]` attributes on action methods |
-| **Vapor** | `app.get("x", use: handler)` |
-| **React Router** / **SvelteKit** | Route component nodes |
+| Framework                        | Shapes recognized                                                                                                                  |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| **Django**                       | `path()`, `re_path()`, `url()`, `include()` in `urls.py` (CBV `.as_view()`, dotted paths)                                          |
+| **Flask**                        | `@app.route('/path', methods=[...])`, blueprint routes                                                                             |
+| **FastAPI**                      | `@app.get(...)`, `@router.post(...)`, all standard methods                                                                         |
+| **Express**                      | `app.get(...)`, `router.post(...)` with middleware chains                                                                          |
+| **NestJS**                       | `@Controller` + `@Get/@Post/...`, GraphQL `@Resolver` + `@Query/@Mutation`, `@MessagePattern`/`@EventPattern`, `@SubscribeMessage` |
+| **Laravel**                      | `Route::get()`, `Route::resource()`, `Controller@action`, tuple syntax                                                             |
+| **Drupal**                       | `*.routing.yml` routes (`_controller`, `_form`, entity handlers); `hook_*` implementations in `.module`/`.theme`/`.install`/`.inc` |
+| **Rails**                        | `get '/x', to: 'users#index'`, hash-rocket `=>` syntax                                                                             |
+| **Spring**                       | `@GetMapping`, `@PostMapping`, `@RequestMapping` on methods                                                                        |
+| **Gin / chi / gorilla / mux**    | `r.GET(...)`, `router.HandleFunc(...)`                                                                                             |
+| **Axum / actix / Rocket**        | `.route("/x", get(handler))`                                                                                                       |
+| **ASP.NET**                      | `[HttpGet("/x")]` attributes on action methods                                                                                     |
+| **Vapor**                        | `app.get("x", use: handler)`                                                                                                       |
+| **React Router** / **SvelteKit** | Route component nodes                                                                                                              |
 
 ---
 
@@ -199,26 +200,26 @@ CodeGraph detects web-framework routing files and emits `route` nodes linked by 
 
 Real iOS and React Native codebases live across multiple languages — a Swift caller invokes an Objective-C selector that's been auto-bridged, a JS file calls into a native module via the React Native bridge, a JSX component delegates to a native view manager. Static tree-sitter extraction stops at each language boundary. CodeGraph bridges them so `trace`, `callers`, `callees`, and `impact` connect end-to-end across the gap.
 
-| Boundary | JS / Swift side | Native side | How |
-|---|---|---|---|
-| **Swift → ObjC** | Swift `obj.foo(bar:)` | ObjC selector `-fooWithBar:` | `@objc` auto-bridging rules (including init/property/protocol forms) + Cocoa preposition prefixes (`With`/`For`/`By`/`In`/`On`/`At`/…) |
-| **ObjC → Swift** | ObjC `[obj fooWithBar:]` | Swift `@objc func foo(bar:)` | Reverse-bridge name candidates; verifies `@objc` exposure from source |
-| **React Native legacy bridge** | JS `NativeModules.X.fn(...)` | ObjC `RCT_EXPORT_METHOD` / `RCT_REMAP_METHOD` · Java/Kotlin `@ReactMethod` | Parses macro/annotation declarations to build a JS-name → native-method map |
-| **React Native TurboModules** | JS `import M from './NativeM'; M.fn(...)` | Native impl matching the Codegen spec | Treats the `Native<X>.ts` spec interface as ground truth |
-| **RN native → JS events** | JS `new NativeEventEmitter(...).addListener('e', cb)` | ObjC `[self sendEventWithName:@"e" body:...]` · Swift `sendEvent(withName: "e", ...)` · Java/Kotlin `.emit("e", ...)` | Synthesized cross-language event channel keyed by literal event name |
-| **Expo Modules** | JS `requireNativeModule('X').fn(...)` | Swift / Kotlin `Module { Name("X"); AsyncFunction("fn") { ... } }` | Parses the Expo DSL literals; synthetic method nodes resolve via existing name-match |
-| **Fabric view components** | JSX `<MyView prop={v}/>` | TS Codegen spec + native impl class | Spec → `component` node; convention-based name+suffix lookup (`View`/`ComponentView`/`Manager`/`ViewManager`) bridges to native |
-| **Legacy Paper view managers** | JSX `<MyView prop={v}/>` | ObjC `RCT_EXPORT_VIEW_PROPERTY` · Java/Kotlin `@ReactProp` | Same as Fabric — Paper-era declarations also produce `component` + `property` nodes |
+| Boundary                       | JS / Swift side                                       | Native side                                                                                                           | How                                                                                                                                    |
+| ------------------------------ | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| **Swift → ObjC**               | Swift `obj.foo(bar:)`                                 | ObjC selector `-fooWithBar:`                                                                                          | `@objc` auto-bridging rules (including init/property/protocol forms) + Cocoa preposition prefixes (`With`/`For`/`By`/`In`/`On`/`At`/…) |
+| **ObjC → Swift**               | ObjC `[obj fooWithBar:]`                              | Swift `@objc func foo(bar:)`                                                                                          | Reverse-bridge name candidates; verifies `@objc` exposure from source                                                                  |
+| **React Native legacy bridge** | JS `NativeModules.X.fn(...)`                          | ObjC `RCT_EXPORT_METHOD` / `RCT_REMAP_METHOD` · Java/Kotlin `@ReactMethod`                                            | Parses macro/annotation declarations to build a JS-name → native-method map                                                            |
+| **React Native TurboModules**  | JS `import M from './NativeM'; M.fn(...)`             | Native impl matching the Codegen spec                                                                                 | Treats the `Native<X>.ts` spec interface as ground truth                                                                               |
+| **RN native → JS events**      | JS `new NativeEventEmitter(...).addListener('e', cb)` | ObjC `[self sendEventWithName:@"e" body:...]` · Swift `sendEvent(withName: "e", ...)` · Java/Kotlin `.emit("e", ...)` | Synthesized cross-language event channel keyed by literal event name                                                                   |
+| **Expo Modules**               | JS `requireNativeModule('X').fn(...)`                 | Swift / Kotlin `Module { Name("X"); AsyncFunction("fn") { ... } }`                                                    | Parses the Expo DSL literals; synthetic method nodes resolve via existing name-match                                                   |
+| **Fabric view components**     | JSX `<MyView prop={v}/>`                              | TS Codegen spec + native impl class                                                                                   | Spec → `component` node; convention-based name+suffix lookup (`View`/`ComponentView`/`Manager`/`ViewManager`) bridges to native        |
+| **Legacy Paper view managers** | JSX `<MyView prop={v}/>`                              | ObjC `RCT_EXPORT_VIEW_PROPERTY` · Java/Kotlin `@ReactProp`                                                            | Same as Fabric — Paper-era declarations also produce `component` + `property` nodes                                                    |
 
 **Validated on real codebases** (small + medium + large for each bridge):
 
-| Bridge | Small | Medium | Large |
-|---|---|---|---|
-| Swift ↔ ObjC | [Charts](https://github.com/danielgindi/Charts) | [realm-swift](https://github.com/realm/realm-swift) | [Wikipedia-iOS](https://github.com/wikimedia/wikipedia-ios) |
-| RN legacy bridge | [AsyncStorage](https://github.com/react-native-async-storage/async-storage) | [react-native-svg](https://github.com/software-mansion/react-native-svg) | [react-native-firebase](https://github.com/invertase/react-native-firebase) |
-| RN native → JS events | [RNGeolocation](https://github.com/Agontuk/react-native-geolocation-service) | — | react-native-firebase |
-| Expo Modules | expo-haptics | expo-camera | expo SDK sweep (7 packages) |
-| Fabric / Paper views | [react-native-segmented-control](https://github.com/react-native-segmented-control/segmented-control) | [react-native-screens](https://github.com/software-mansion/react-native-screens) | [react-native-skia](https://github.com/Shopify/react-native-skia) |
+| Bridge                | Small                                                                                                 | Medium                                                                           | Large                                                                       |
+| --------------------- | ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Swift ↔ ObjC          | [Charts](https://github.com/danielgindi/Charts)                                                       | [realm-swift](https://github.com/realm/realm-swift)                              | [Wikipedia-iOS](https://github.com/wikimedia/wikipedia-ios)                 |
+| RN legacy bridge      | [AsyncStorage](https://github.com/react-native-async-storage/async-storage)                           | [react-native-svg](https://github.com/software-mansion/react-native-svg)         | [react-native-firebase](https://github.com/invertase/react-native-firebase) |
+| RN native → JS events | [RNGeolocation](https://github.com/Agontuk/react-native-geolocation-service)                          | —                                                                                | react-native-firebase                                                       |
+| Expo Modules          | expo-haptics                                                                                          | expo-camera                                                                      | expo SDK sweep (7 packages)                                                 |
+| Fabric / Paper views  | [react-native-segmented-control](https://github.com/react-native-segmented-control/segmented-control) | [react-native-screens](https://github.com/software-mansion/react-native-screens) | [react-native-skia](https://github.com/Shopify/react-native-skia)           |
 
 Each bridge emits edges tagged `provenance:'heuristic'` with `metadata.synthesizedBy:` set to a stable channel name (e.g. `swift-objc-bridge`, `rn-event-channel`, `fabric-native-impl`, `expo-module-extract`), so the agent can tell at a glance how a hop got into the graph.
 
@@ -233,7 +234,7 @@ npx @colbymchenry/codegraph
 ```
 
 The installer will:
-- Ask which agent(s) to configure — auto-detects installed ones from: **Claude Code**, **Cursor**, **Codex CLI**, **opencode**, **Hermes Agent**, **Gemini CLI**, **Antigravity IDE**, **Kiro**
+- Ask which agent(s) to configure — auto-detects installed ones from: **Claude Code**, **Cursor**, **Codex CLI**, **opencode**, **Hermes Agent**, **Gemini CLI**, **Antigravity IDE**, **Kiro**, **pi**
 - Prompt to install `codegraph` on your PATH (so agents can launch the MCP server)
 - Ask whether configs apply to all your projects or just this one
 - Write each chosen agent's MCP server config + an instructions file (e.g. `CLAUDE.md`, `.cursor/rules/codegraph.mdc`, `~/.codex/AGENTS.md`, `~/.gemini/GEMINI.md`)
@@ -249,17 +250,17 @@ codegraph install --target=auto --location=local     # detected agents, project-
 codegraph install --print-config codex               # print snippet, no file writes
 ```
 
-| Flag | Values | Default |
-|---|---|---|
-| `--target` | `auto`, `all`, `none`, or csv (`claude,cursor,...`) | prompt |
-| `--location` | `global`, `local` | prompt |
-| `--yes` | (boolean) | prompt every step |
-| `--no-permissions` | (boolean) skip Claude auto-allow list | permissions on |
-| `--print-config <id>` | dump snippet for one agent and exit | — |
+| Flag                  | Values                                              | Default           |
+| --------------------- | --------------------------------------------------- | ----------------- |
+| `--target`            | `auto`, `all`, `none`, or csv (`claude,cursor,...`) | prompt            |
+| `--location`          | `global`, `local`                                   | prompt            |
+| `--yes`               | (boolean)                                           | prompt every step |
+| `--no-permissions`    | (boolean) skip Claude auto-allow list               | permissions on    |
+| `--print-config <id>` | dump snippet for one agent and exit                 | —                 |
 
 ### 2. Restart Your Agent
 
-Restart your agent (Claude Code / Cursor / Codex CLI / opencode / Hermes Agent / Gemini CLI / Antigravity IDE / Kiro) for the MCP server to load.
+Restart your agent (Claude Code / Cursor / Codex CLI / opencode / Hermes Agent / Gemini CLI / Antigravity IDE / Kiro / pi) for the MCP server to load.
 
 ### 3. Initialize Projects
 
@@ -329,15 +330,15 @@ CodeGraph builds a semantic knowledge graph of codebases for faster, smarter cod
 
 **Tool selection by intent:**
 
-| Tool | Use For |
-|------|---------|
-| `codegraph_context` | Map a task / feature / area first — composes search + node + callers + callees in one call |
-| `codegraph_trace` | "How does X reach Y" — the call path, each hop's body inline (follows dynamic-dispatch hops grep can't) |
-| `codegraph_explore` | Survey several related symbols' source in ONE budget-capped call |
-| `codegraph_search` | Find a symbol by name |
-| `codegraph_callers` / `codegraph_callees` | Walk call flow one hop at a time |
-| `codegraph_impact` | Check what's affected before editing |
-| `codegraph_node` | Get a single symbol's source / signature |
+| Tool                                      | Use For                                                                                                 |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `codegraph_context`                       | Map a task / feature / area first — composes search + node + callers + callees in one call              |
+| `codegraph_trace`                         | "How does X reach Y" — the call path, each hop's body inline (follows dynamic-dispatch hops grep can't) |
+| `codegraph_explore`                       | Survey several related symbols' source in ONE budget-capped call                                        |
+| `codegraph_search`                        | Find a symbol by name                                                                                   |
+| `codegraph_callers` / `codegraph_callees` | Walk call flow one hop at a time                                                                        |
+| `codegraph_impact`                        | Check what's affected before editing                                                                    |
+| `codegraph_node`                          | Get a single symbol's source / signature                                                                |
 
 A direct CodeGraph answer is a handful of calls; a grep/read exploration is dozens.
 
@@ -416,13 +417,13 @@ git diff --name-only | codegraph affected --stdin   # Pipe from git diff
 codegraph affected src/auth.ts --filter "e2e/*"     # Custom test file pattern
 ```
 
-| Option | Description | Default |
-|--------|-------------|---------|
-| `--stdin` | Read file list from stdin | `false` |
-| `-d, --depth <n>` | Max dependency traversal depth | `5` |
+| Option                | Description                        | Default     |
+| --------------------- | ---------------------------------- | ----------- |
+| `--stdin`             | Read file list from stdin          | `false`     |
+| `-d, --depth <n>`     | Max dependency traversal depth     | `5`         |
 | `-f, --filter <glob>` | Custom glob to identify test files | auto-detect |
-| `-j, --json` | Output as JSON | `false` |
-| `-q, --quiet` | Output file paths only | `false` |
+| `-j, --json`          | Output as JSON                     | `false`     |
+| `-q, --quiet`         | Output file paths only             | `false`     |
 
 **CI/hook example:**
 
@@ -440,18 +441,18 @@ fi
 
 When running as an MCP server, CodeGraph exposes these tools to Claude Code:
 
-| Tool | Purpose |
-|------|---------|
-| `codegraph_search` | Find symbols by name across the codebase |
-| `codegraph_context` | Build relevant code context for a task |
-| `codegraph_trace` | Trace the call path between two symbols ("how does X reach Y") in one call — each hop with its body inline, following dynamic-dispatch hops (callbacks, React re-render, interface→impl) that grep can't |
-| `codegraph_callers` | Find what calls a function |
-| `codegraph_callees` | Find what a function calls |
-| `codegraph_impact` | Analyze what code is affected by changing a symbol |
-| `codegraph_node` | Get details about a specific symbol (optionally with source code) |
-| `codegraph_explore` | Return source for several related symbols grouped by file, plus a relationship map, in one call |
-| `codegraph_files` | Get indexed file structure (faster than filesystem scanning) |
-| `codegraph_status` | Check index health and statistics |
+| Tool                | Purpose                                                                                                                                                                                                  |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `codegraph_search`  | Find symbols by name across the codebase                                                                                                                                                                 |
+| `codegraph_context` | Build relevant code context for a task                                                                                                                                                                   |
+| `codegraph_trace`   | Trace the call path between two symbols ("how does X reach Y") in one call — each hop with its body inline, following dynamic-dispatch hops (callbacks, React re-render, interface→impl) that grep can't |
+| `codegraph_callers` | Find what calls a function                                                                                                                                                                               |
+| `codegraph_callees` | Find what a function calls                                                                                                                                                                               |
+| `codegraph_impact`  | Analyze what code is affected by changing a symbol                                                                                                                                                       |
+| `codegraph_node`    | Get details about a specific symbol (optionally with source code)                                                                                                                                        |
+| `codegraph_explore` | Return source for several related symbols grouped by file, plus a relationship map, in one call                                                                                                          |
+| `codegraph_files`   | Get indexed file structure (faster than filesystem scanning)                                                                                                                                             |
+| `codegraph_status`  | Check index health and statistics                                                                                                                                                                        |
 
 ---
 
@@ -506,11 +507,11 @@ negation is the explicit opt-in.
 Every release ships a self-contained build (bundled Node runtime — nothing to
 compile) for all three desktop OSes, on both Intel/AMD (x64) and ARM (arm64):
 
-| Platform | Architectures | Install |
-|----------|---------------|---------|
-| Windows | x64, arm64 | PowerShell installer or npm |
-| macOS | x64, arm64 | shell installer or npm |
-| Linux | x64, arm64 | shell installer or npm |
+| Platform | Architectures | Install                     |
+| -------- | ------------- | --------------------------- |
+| Windows  | x64, arm64    | PowerShell installer or npm |
+| macOS    | x64, arm64    | shell installer or npm      |
+| Linux    | x64, arm64    | shell installer or npm      |
 
 See [Get Started](#get-started) for the one-line install commands.
 
@@ -527,33 +528,34 @@ the MCP server and writing its instructions file:
 - **Gemini CLI**
 - **Antigravity IDE**
 - **Kiro**
+- **pi**
 
 ## Supported Languages
 
-| Language | Extension | Status |
-|----------|-----------|--------|
-| TypeScript | `.ts`, `.tsx` | Full support |
-| JavaScript | `.js`, `.jsx`, `.mjs` | Full support |
-| Python | `.py` | Full support |
-| Go | `.go` | Full support |
-| Rust | `.rs` | Full support |
-| Java | `.java` | Full support |
-| C# | `.cs` | Full support |
-| PHP | `.php` | Full support |
-| Ruby | `.rb` | Full support |
-| C | `.c`, `.h` | Full support |
-| C++ | `.cpp`, `.hpp`, `.cc` | Full support |
-| Objective-C | `.m`, `.mm`, `.h` | Partial support (classes, protocols, methods, `@property`, `#import`, message sends; `.mm` ObjC++ may parse incompletely) |
-| Swift | `.swift` | Full support |
-| Kotlin | `.kt`, `.kts` | Full support |
-| Scala | `.scala`, `.sc` | Full support (classes, traits, methods, type aliases, Scala 3 enums) |
-| Dart | `.dart` | Full support |
-| Svelte | `.svelte` | Full support (script extraction, Svelte 5 runes, SvelteKit routes) |
-| Vue | `.vue` | Full support (script + script-setup extraction, Nuxt page/API/middleware routes) |
-| Liquid | `.liquid` | Full support |
-| Pascal / Delphi | `.pas`, `.dpr`, `.dpk`, `.lpr` | Full support (classes, records, interfaces, enums, DFM/FMX form files) |
-| Lua | `.lua` | Full support (functions, methods with receivers, local variables, `require` imports, call edges) |
-| Luau | `.luau` | Full support (everything in Lua, plus `type`/`export type` aliases, typed signatures, and Roblox instance-path `require`) |
+| Language        | Extension                      | Status                                                                                                                    |
+| --------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| TypeScript      | `.ts`, `.tsx`                  | Full support                                                                                                              |
+| JavaScript      | `.js`, `.jsx`, `.mjs`          | Full support                                                                                                              |
+| Python          | `.py`                          | Full support                                                                                                              |
+| Go              | `.go`                          | Full support                                                                                                              |
+| Rust            | `.rs`                          | Full support                                                                                                              |
+| Java            | `.java`                        | Full support                                                                                                              |
+| C#              | `.cs`                          | Full support                                                                                                              |
+| PHP             | `.php`                         | Full support                                                                                                              |
+| Ruby            | `.rb`                          | Full support                                                                                                              |
+| C               | `.c`, `.h`                     | Full support                                                                                                              |
+| C++             | `.cpp`, `.hpp`, `.cc`          | Full support                                                                                                              |
+| Objective-C     | `.m`, `.mm`, `.h`              | Partial support (classes, protocols, methods, `@property`, `#import`, message sends; `.mm` ObjC++ may parse incompletely) |
+| Swift           | `.swift`                       | Full support                                                                                                              |
+| Kotlin          | `.kt`, `.kts`                  | Full support                                                                                                              |
+| Scala           | `.scala`, `.sc`                | Full support (classes, traits, methods, type aliases, Scala 3 enums)                                                      |
+| Dart            | `.dart`                        | Full support                                                                                                              |
+| Svelte          | `.svelte`                      | Full support (script extraction, Svelte 5 runes, SvelteKit routes)                                                        |
+| Vue             | `.vue`                         | Full support (script + script-setup extraction, Nuxt page/API/middleware routes)                                          |
+| Liquid          | `.liquid`                      | Full support                                                                                                              |
+| Pascal / Delphi | `.pas`, `.dpr`, `.dpk`, `.lpr` | Full support (classes, records, interfaces, enums, DFM/FMX form files)                                                    |
+| Lua             | `.lua`                         | Full support (functions, methods with receivers, local variables, `require` imports, call edges)                          |
+| Luau            | `.luau`                        | Full support (everything in Lua, plus `type`/`export type` aliases, typed signatures, and Roblox instance-path `require`) |
 
 ## Troubleshooting
 
@@ -588,7 +590,7 @@ MIT
 
 <div align="center">
 
-**Made for AI coding agents — Claude Code, Cursor, Codex CLI, opencode, Hermes Agent, Gemini CLI, Antigravity IDE, and Kiro**
+**Made for AI coding agents — Claude Code, Cursor, Codex CLI, opencode, Hermes Agent, Gemini CLI, Antigravity IDE, Kiro and pi**
 
 [Report Bug](https://github.com/colbymchenry/codegraph/issues) · [Request Feature](https://github.com/colbymchenry/codegraph/issues)
 
